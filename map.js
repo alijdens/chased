@@ -145,3 +145,29 @@ function map_get_tile_coords(row, col) {
     const y = row * TILE_SIZE + TILE_SIZE / 2;
     return new Vector2(x, y);
 }
+
+/**
+ * Draws a map.
+ * 
+ * @param renderer Renderer.
+ * @param map Map to draw.
+ */
+function map_draw(renderer, map) {
+    for( var i = 0; i < map.tiles.length; i++ ) {
+        const row = map.tiles[i];
+        for( var j = 0; j < row.length; j++ ) {
+            const tile_pos = map.tile_coords[i][j];
+
+            switch( row[j] ) {
+                case MAP_TILE.EMPTY:
+                    renderer.draw_sprite(SPRITES.floor, tile_pos.x, tile_pos.y, TILE_SIZE, TILE_SIZE);
+                    break;
+                case MAP_TILE.WALL:
+                    renderer.draw_sprite(SPRITES.wall, tile_pos.x, tile_pos.y, TILE_SIZE, TILE_SIZE);
+                    break;
+                default:
+                    throw new Error("Undefined game object " + row[j]);
+            }           
+        }
+    }
+}

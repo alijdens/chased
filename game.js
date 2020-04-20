@@ -40,9 +40,10 @@ var game_loop = function(renderer, start_time) {
         system_manager_update(frame_rate);
     }
 
-    renderer.clear_screen();
-    renderer.draw_map(map_get());
-    sprite_draw(renderer);
+    renderer.clear('black');
+    var viewport = game_get_map_viewport(renderer, map_get(), renderer.width(), renderer.height());
+    map_draw(viewport, map_get());
+    sprite_draw(viewport);
 
     if( _game_over ) {
         game_draw_end_screen(renderer);
@@ -176,7 +177,7 @@ function game_over( player_won ) {
     
     var entity = entity_manager_create_entity();
     sprite_component_add(entity, SPRITES.press_any_key_message, false, 100);
-    sprite_add_draw_params(entity, 1/2, 2/3, 1);
+    sprite_add_draw_params(entity, 1/2, 2/3, 0.7, null, true);
     sprite_blink_component_add(entity, 0.8);
 
     setTimeout(set_end_game_controls, 1000);
@@ -204,4 +205,19 @@ function is_empty( obj ) {
         }
     }
     return true;
+}
+
+function game_get_map_viewport(renderer, map, width, height) {
+    // calculates the scale that relates the game space to viewport space
+    const tile_size = Math.min(width / map.width, height / map.height);
+
+    // the amount of space that won't be used on each dimension of the screen
+    const x_left_over = Math.max(0, width - tile_size * map.width);
+    const y_left_over = Math.max(0, height - tile_size * map.height);
+
+    return new Viewport(
+        renderer,
+        x_left_over / 2, y_left_over / 2,
+        width - x_left_over, height - y_left_over,
+        TILE_SIZE * map.width, TILE_SIZE * map.height);
 }

@@ -15,6 +15,7 @@ const COMPONENT = {
     PLAYER_KILLER_TAG: 'player_killer_tag',
     DRAW_PARAMS: 'draw_params',
     SPRITE_BLINK: 'sprite_blink',
+    MENU_CURSOR_TAG: 'menu_cursor_tag',
 };
 
 // systems enumerator

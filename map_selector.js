@@ -4,33 +4,24 @@
 var _current_map = 0;
 
 const TEST_MAP = `
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X  C    |                         |     |        X
-X -------                         |C    |   C C  X
-X      o                               F|        X
-X ---- ------------------------------------------X
-X                                              F X
-X----------------------------------     |   XX   X
-X         ||||||||||||||||||||||||      |        X
-X   -|    ||||||||||||||||||||||||   -----     --X
-X--  |    ||||||||||||||||||||||||   ---------  -X
-X    |    ||||||||||||||||||||||||   - F       F X
-X  --|    ||||||||||||||||||||||||   -----  -----X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X    |                               |           X
-X--  |------------------------------------       X
-X      P  ||||||||||||||||||||||||C          F   X
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-`
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+X  C    |  |     |        X
+X - -----  |C    |   C C  X
+X      o        F|        X
+X - -- -------------------X
+X                       F X
+X-- --------     |   XX   X
+X         |      |        X
+X   -|    |   -----     --X
+X--  |    |   ---------  -X
+X    |    |   - F       F X
+X  --|    |   -----  -----X
+X    |        |           X
+X    |        |           X
+X--  |-------------       X
+X      P  |C          F   X
+XXXXXXXXXXXXXXXXXXXXXXXXXXX
+`;
 
 const MAP_1 = `
 -------------
@@ -40,7 +31,7 @@ const MAP_1 = `
 |         - |
 |o     P    |
 |-----------|
-`
+`;
 
 const MAP_2 = `
 -----------------
@@ -49,7 +40,6 @@ const MAP_2 = `
 |     -----     |
 |    -     -    |
 | --            |
-|               |
 |o      P      o|
 |---------------|
 `;
@@ -68,7 +58,7 @@ X      |--  X
 X     o     X
 X           X
 XXXXXXXXXXXXX
-`
+`;
 
 const MAP_4 = `
 XXXXXXXXXXXXXXXXX
@@ -83,7 +73,7 @@ X |P   ------ | X
 X |--         | X
 X     XXXXXXXX|oX
 XXXXXXXXXXXXXXXXX
-`
+`;
 
 const MAP_5 = `
 XXXXXXXXXXXXXXXX
@@ -98,7 +88,7 @@ X    |  o  --  X
 X |- |         X
 X |        P   X
 XXXXXXXXXXXXXXXX
-`
+`;
 
 var MAP_6 = `
 XXXXXXXXXXXXXXXXX
@@ -113,7 +103,7 @@ X |             X
 X |---- ------| X
 X              oX
 XXXXXXXXXXXXXXXXX
-`
+`;
 
 var MAP_7 = `
 XXXXXXXXXXXXXXXXX
@@ -132,7 +122,7 @@ XXXXXXXXXXXXXXXXX
 
 // list of maps
 const MAPS = [
-    TEST_MAP,
+    //TEST_MAP,
     MAP_1,
     MAP_2,
     MAP_3,
@@ -144,13 +134,15 @@ const MAPS = [
 
 function map_selector_get_current() {
     var map = map_parse(MAPS[_current_map]);
+    // TODO: map shouldn't be set globally
     map_set(map);
     return map;
 }
 
 function map_selector_set_next() {
-    _current_map += 1;
-    if( _current_map == MAPS.length ) {
-        _current_map = 0;
-    }
+    _current_map = (_current_map + 1) % MAPS.length;
+}
+
+function map_selector_set(map_num) {
+    _current_map = map_num;
 }

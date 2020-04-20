@@ -92,5 +92,20 @@ function _render_static_sprite(renderer, sprite, draw_params) {
     } else {
         var frame = sprite.data;
     }
-    renderer.draw_screen(frame, draw_params.x, draw_params.y, draw_params.scale);
+
+    var width = draw_params.width;
+    var height = draw_params.height;
+    if( height === null ) {
+        // keep aspect ratio
+        height = (width / frame.clip.width) * frame.clip.height;
+    } else if( width === null ) {
+        // keep aspect ratio
+        width = (height / frame.clip.height) * frame.clip.width;
+    }
+
+    if( draw_params.draw_on_screen ) {
+        renderer.draw_screen(frame, draw_params.x, draw_params.y, width, height);
+    } else {
+        renderer.draw_sprite(frame, draw_params.x, draw_params.y, width, height, 0);
+    }
 }

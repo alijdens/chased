@@ -36,11 +36,13 @@ function sprite_blink_component_add(entity, period) {
  * @param entity Entity to attach.
  * @param x Horizontal position in the screen (0-1).
  * @param y Vertical position in the screen (0-1).
- * @param scale Size scaler factor.
+ * @param width Width to use when drawing.
+ * @param height Height to use when drawing (or `null` to keep aspect ratio).
+ * @param draw_on_screen Whether to draw directly to the screen or on the viewport.
  */
-function sprite_add_draw_params(entity, x, y, scale) {
+function sprite_add_draw_params(entity, x, y, width, height, draw_on_screen) {
     var data = {
-        x: x, y: y, scale: scale,
+        x: x, y: y, width: width, height: height, draw_on_screen: draw_on_screen
     };
     entity_manager_add_component(entity, COMPONENT.DRAW_PARAMS, data);
 }
