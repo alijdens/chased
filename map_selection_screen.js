@@ -1,11 +1,16 @@
 "use strict";
 
 
+const PLAYER_ACTIONS = {
+    NONE: 'none',
+    GO_TO_MAIN_MENU: 'go_to_main_menu',
+    MAP_SELECTED: 'map_selected',
+};
+
+var _action = PLAYER_ACTIONS.NONE;
+
 // position of the map selection cursor.
 var _cursor_map_index = 0;
-
-// `true` if a map was selected by the user.
-var _map_selected = false;
 
 // size of the preview window
 const PREVIEW_SIZE = 200;
@@ -21,6 +26,7 @@ const MIN_MARGIN = 30;
  */
 function map_selection_screen(renderer) {
     _cursor_map_index = 0;
+    _action = PLAYER_ACTIONS.NONE;
 
     entity_manager_init();
     system_manager_init();
@@ -42,10 +48,17 @@ function map_selection_screen(renderer) {
  * @param start_time Last time this function was called.
  */
 function _map_selection_loop(renderer) {
-    if( _map_selected ) {
-        map_selector_set(_cursor_map_index);
-        game_start(renderer, map_selector_get_current());
-        return;
+    switch( _action ) {
+        case PLAYER_ACTIONS.NONE:
+            break;
+        case PLAYER_ACTIONS.MAP_SELECTED:
+            map_selector_set(_cursor_map_index);
+            game_start(renderer, map_selector_get_current());
+            return;
+        case PLAYER_ACTIONS.GO_TO_MAIN_MENU:
+            main_menu(renderer);
+            return;
+        default: throw new Error('Invalid action ' + _action);
     }
 
     while( !keyboard_queue_is_empty() ) {
@@ -143,7 +156,7 @@ function _get_margin_size(renderer) {
  * Action of selecting a map to play.
  */
 function map_selection_screen_start_game() {
-    _map_selected = true;
+    _action = PLAYER_ACTIONS.MAP_SELECTED;
 }
 
 /**
@@ -173,6 +186,9 @@ function _process_screen_selection_keyboard_event(event, renderer) {
             break;
         case 'Enter':
             map_selection_screen_start_game();
+            break;
+        case 'Escape':
+            _action = PLAYER_ACTIONS.GO_TO_MAIN_MENU;
             break;
     }
 }
