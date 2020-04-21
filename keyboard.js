@@ -13,13 +13,6 @@ function disable_game_controls() {
 }
 
 /**
- * Sets the appropriate in-game controls.
- */
-function set_game_controls() {
-    document.onkeydown = game_on_key_down;
-}
-
-/**
  * Sets the appropriate end game controls.
  */
 function set_end_game_controls() {
@@ -54,58 +47,14 @@ function set_main_menu_controls() {
 }
 
 /**
- * Sets the map selection screen controls.
+ * Pushes keyboard events to the queue.
  */
-function set_map_selection_controls() {
+function keyboard_set_queue_events() {
     document.onkeydown = function(event) {
-        keyboard_queue_push(event.key);
-        //switch( event.key ) {
-        //    case 'ArrowUp':
-        //        map_selection_screen_move_cursor_up();
-        //        break;
-        //    case 'ArrowDown':
-        //        map_selection_screen_move_cursor_down();
-        //        break;
-        //    case 'ArrowLeft':
-        //        map_selection_screen_move_cursor_left();
-        //        break;
-        //    case 'ArrowRight':
-        //        map_selection_screen_move_cursor_right();
-        //        break;
-        //    case 'Enter':
-        //        map_selection_screen_start_game();
-        //        break;
-        //}
+        keyboard_queue_push({key: event.key, action: 'down'});
     };
-}
-
-/**
- * Game keyboard event handler.
- * @param event Keyboard event.
- */
-function game_on_key_down(event) {
-    // gets the player entity
-    var entities = entity_manager_get_with_component(COMPONENT.HUMAN_CONTROL);
-
-    for( var entity in entities ) {
-        var data = entity_manager_get_component(entity, COMPONENT.ROBOT_MOVE);
-
-        switch( event.key ) {
-            case 'ArrowUp':
-                robot_move(entity, data, ROBOT_DIRECTION.UP);
-                break;
-            case 'ArrowDown':
-                robot_move(entity, data, ROBOT_DIRECTION.DOWN);
-                break;
-            case 'ArrowRight':
-                robot_move(entity, data, ROBOT_DIRECTION.RIGHT);
-                break;
-            case 'ArrowLeft':
-                robot_move(entity, data, ROBOT_DIRECTION.LEFT);
-                break;
-            default:
-                return;
-        }
+    document.onkeyup = function(event) {
+        keyboard_queue_push({key: event.key, action: 'up'});
     }
 }
 

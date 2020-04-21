@@ -3,6 +3,9 @@
 // accumulation of elapsed time since last systems update.
 var accumulated_dt = 0;
 
+// used to accelerate or slow down the time simulation.
+var _time_multiplier = 1;
+
 // frames per second to simulate. Uses a constant framerate
 // to guarantee deterministic physics simulation on every
 // environment.
@@ -16,6 +19,11 @@ var _player_won;
 
 // whether the game must be reloaded.
 var _reload = false;
+
+// used to indicate the state when a key was pressed and we are waiting 
+// for it to be released.
+var _key_pressed = {};
+
 
 /**
  * Main game loop.
@@ -31,7 +39,7 @@ var game_loop = function(renderer, start_time) {
 
     // calculates the elapsed time since the last call in seconds
     var current_time = Date.now();
-    var dt = (current_time - start_time) / 1000;
+    var dt = ((current_time - start_time) / 1000) * _time_multiplier;
     
     // updates the systems
     accumulated_dt += dt;
@@ -48,6 +56,12 @@ var game_loop = function(renderer, start_time) {
     if( _game_over ) {
         game_draw_end_screen(renderer);
     }
+
+    while( !keyboard_queue_is_empty() ) {
+        _process_game_keyboard_event( keyboard_queue_pull() );
+    }
+
+    _game_input_handle();
     
     requestAnimationFrame(function() {
         game_loop(renderer, current_time);
@@ -69,6 +83,7 @@ function game_start(renderer, map) {
     _reload = false;
     _player_won = false;
     accumulated_dt = 0;
+    _key_pressed = {};
 
     map_set(map);
 
@@ -100,7 +115,8 @@ function game_start(renderer, map) {
     }
 
     // enables keyboard control
-    set_game_controls();
+    keyboard_set_queue_events();
+    keyboard_queue_set_empty();
 
     var start_time = Date.now();
     game_loop(renderer, start_time);
@@ -207,6 +223,14 @@ function is_empty( obj ) {
     return true;
 }
 
+/**
+ * Creates and returns a viewport for the game map.
+ * 
+ * @param renderer Renderer.
+ * @param map Map to create the viewport for.
+ * @param width Viewport screen width.
+ * @param height Viewport screen height.
+ */
 function game_get_map_viewport(renderer, map, width, height) {
     // calculates the scale that relates the game space to viewport space
     const tile_size = Math.min(width / map.width, height / map.height);
@@ -220,4 +244,45 @@ function game_get_map_viewport(renderer, map, width, height) {
         x_left_over / 2, y_left_over / 2,
         width - x_left_over, height - y_left_over,
         TILE_SIZE * map.width, TILE_SIZE * map.height);
+}
+
+/**
+ * Processes a key event.
+ * 
+ * @param event Key event.
+ */
+function _process_game_keyboard_event(event) {
+    // marks the key as pressed or released
+    _key_pressed[event.key] = (event.action == 'down');
+
+    // handles time speed
+    if( event.action == 'down' && event.key == ' ' ) {
+        if( _time_multiplier == 2 ) {
+            _time_multiplier = 1;
+        } else {
+            _time_multiplier = 2;
+        }
+    }
+}
+
+/**
+ * Handles the player controls.
+ */
+function _game_input_handle() {
+    // gets the player entity
+    var entities = entity_manager_get_with_component(COMPONENT.HUMAN_CONTROL);
+
+    for( var entity in entities ) {
+        var data = entity_manager_get_component(entity, COMPONENT.ROBOT_MOVE);
+
+        if( _key_pressed['ArrowUp'] ) {
+            robot_move(entity, data, ROBOT_DIRECTION.UP);
+        } else if( _key_pressed['ArrowRight'] ) {
+            robot_move(entity, data, ROBOT_DIRECTION.RIGHT);
+        } else if( _key_pressed['ArrowDown'] ) {
+            robot_move(entity, data, ROBOT_DIRECTION.DOWN);
+        } else if( _key_pressed['ArrowLeft'] ) {
+            robot_move(entity, data, ROBOT_DIRECTION.LEFT);
+        }
+    }
 }

@@ -29,7 +29,7 @@ function map_selection_screen(renderer) {
     system_manager_register(SYSTEM.SPRITES, sprite_update);
 
     // enables keyboard control
-    set_map_selection_controls();
+    keyboard_set_queue_events();
     keyboard_queue_set_empty();
 
     _map_selection_loop(renderer);
@@ -49,8 +49,7 @@ function _map_selection_loop(renderer) {
     }
 
     while( !keyboard_queue_is_empty() ) {
-        var key = keyboard_queue_pull();
-        _process_keyboard_event(key, renderer);
+        _process_screen_selection_keyboard_event(keyboard_queue_pull(), renderer);
     }
     _normalize_cursor_index();
 
@@ -129,7 +128,7 @@ function _get_preview_coordinates(renderer, row, col) {
 
 /**
  * Returns the value of the previews margins on X and Y coordinates.
- * @param {*} renderer 
+ * @param renderer 
  */
 function _get_margin_size(renderer) {
     const dims = _get_gallery_dimensions(renderer);
@@ -150,12 +149,16 @@ function map_selection_screen_start_game() {
 /**
  * Processes a keyboard event in the queue.
  * 
- * @param key Key code.
+ * @param event Keyboard event.
  * @param renderer Renderer.
  */
-function _process_keyboard_event(key, renderer) {
+function _process_screen_selection_keyboard_event(event, renderer) {
+    if( event.action != 'down' ) {
+        return;
+    }
+
     const dims = _get_gallery_dimensions(renderer);
-    switch( key ) {
+    switch( event.key ) {
         case 'ArrowUp':
             _cursor_map_index -= dims.cols;
             break;
