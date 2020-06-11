@@ -34,9 +34,11 @@ function set_main_menu_controls() {
     document.onkeydown = function(event) {
         switch( event.key ) {
             case 'ArrowUp':
+            case 'w':
                 main_menu_move_cursor_up();
                 break;
             case 'ArrowDown':
+            case 's':
                 main_menu_move_cursor_down();
                 break;
             case 'Enter':

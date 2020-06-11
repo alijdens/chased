@@ -275,13 +275,13 @@ function _game_input_handle() {
     for( var entity in entities ) {
         var data = entity_manager_get_component(entity, COMPONENT.ROBOT_MOVE);
 
-        if( _key_pressed['ArrowUp'] ) {
+        if( _key_pressed['ArrowUp'] || _key_pressed['w'] ) {
             robot_move(entity, data, ROBOT_DIRECTION.UP);
-        } else if( _key_pressed['ArrowRight'] ) {
+        } else if( _key_pressed['ArrowRight'] || _key_pressed['d'] ) {
             robot_move(entity, data, ROBOT_DIRECTION.RIGHT);
-        } else if( _key_pressed['ArrowDown'] ) {
+        } else if( _key_pressed['ArrowDown'] || _key_pressed['s'] ) {
             robot_move(entity, data, ROBOT_DIRECTION.DOWN);
-        } else if( _key_pressed['ArrowLeft'] ) {
+        } else if( _key_pressed['ArrowLeft'] || _key_pressed['a'] ) {
             robot_move(entity, data, ROBOT_DIRECTION.LEFT);
         }
     }
