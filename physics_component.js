@@ -85,6 +85,16 @@ function physics_test_bb_overlap(body1, body2) {
     const bb1 = physics_get_body_bb(body1);
     const bb2 = physics_get_body_bb(body2);
 
+    return physics_test_bb_overlaps_bb(bb1, bb2);
+}
+
+/**
+ * Tests if 2 bounding boxes overlap.
+ * 
+ * @param bb1 Bounding box.
+ * @param bb2 Bounding box.
+ */
+function physics_test_bb_overlaps_bb(bb1, bb2) {
     const x_overlap = ( bb1.max.x >= bb2.min.x ) && ( bb2.max.x >= bb1.min.x );
     const y_overlap = ( bb1.max.y >= bb2.min.y ) && ( bb2.max.y >= bb1.min.y );
 

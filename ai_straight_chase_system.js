@@ -36,22 +36,22 @@ function ai_straight_chase_system_update( dt ) {
         // moves in the shortest available dimension
         var direction = undefined;
         if( d_x > 0 ) {
-            if( map.tiles[pos.row][pos.col+1] == MAP_TILE.EMPTY ) {
+            if( robot_can_move(entity, map, {row: pos.row, col: pos.col + 1}) ) {
                 direction = ROBOT_DIRECTION.RIGHT;
             }
         } else if( d_x < 0 ) {
-            if( map.tiles[pos.row][pos.col-1] == MAP_TILE.EMPTY ) {
+            if( robot_can_move(entity, map, {row: pos.row, col: pos.col - 1}) ) {
                 direction = ROBOT_DIRECTION.LEFT;
             }
         }
 
         if( direction === undefined ) {
             if( d_y > 0 ) {
-                if( map.tiles[pos.row+1][pos.col] == MAP_TILE.EMPTY ) {
+                if( robot_can_move(entity, map, {row: pos.row + 1, col: pos.col}) ) {
                     direction = ROBOT_DIRECTION.DOWN;
                 }
             } else if( d_y < 0 ) {
-                if( map.tiles[pos.row-1][pos.col] == MAP_TILE.EMPTY ) {
+                if( robot_can_move(entity, map, {row: pos.row - 1, col: pos.col}) ) {
                     direction = ROBOT_DIRECTION.UP;
                 }
             }

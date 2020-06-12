@@ -16,6 +16,7 @@ const COMPONENT = {
     DRAW_PARAMS: 'draw_params',
     SPRITE_BLINK: 'sprite_blink',
     MENU_CURSOR_TAG: 'menu_cursor_tag',
+    GHOST_TAG: 'ghost_tag',
 };
 
 // systems enumerator

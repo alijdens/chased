@@ -17,9 +17,9 @@ X--  |    |   ---------  -X
 X    |    |   - F       F X
 X  --|    |   -----  -----X
 X    |        |           X
-X    |        |           X
+X    |        |    F      X
 X--  |-------------       X
-X      P  |C          F   X
+X      P  |C      C       X
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
 `;
 
@@ -120,9 +120,22 @@ XoC     XXXXXXXoX
 XXXXXXXXXXXXXXXXX
 `;
 
+var MAP_8 = `
+XXXXXXXXXXXXXXXX
+XC|     P    |CX
+X |          | X
+X |          | X
+X |          | X
+X              X
+X              X
+X              X
+X       o      X
+XXXXXXXXXXXXXXXX
+`;
+
 // list of maps
 const MAPS = [
-    //TEST_MAP,
+//    TEST_MAP,
     MAP_1,
     MAP_2,
     MAP_3,
@@ -130,6 +143,7 @@ const MAPS = [
     MAP_5,
     MAP_6,
     MAP_7,
+    MAP_8,
 ];
 
 function map_selector_get_current() {
