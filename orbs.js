@@ -13,4 +13,5 @@ function orb_create(position) {
     physics_component_add(entity, coords, 0, physics_create_circular_shape(ORB_RADIUS));
     sprite_component_add(entity, SPRITES.orb, false);
     entity_manager_add_component(entity, COMPONENT.ORB_TAG, {});
+    entity_manager_add_component(entity, COMPONENT.GHOST_TAG, {});
 }

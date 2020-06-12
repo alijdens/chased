@@ -111,7 +111,7 @@ function game_start(renderer, map) {
         chaser_create(map.chasers[i], player);
     }
     for( var i = 0; i < map.finders.length; i++ ) {
-        finder_create(map.chasers[i], player);
+        finder_create(map.finders[i], player);
     }
 
     // enables keyboard control
