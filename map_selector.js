@@ -51,7 +51,7 @@ X           X
 X    |o     X
 X    | |    X
 X  C-- |  P X
-X o    --   X
+Xo     --   X
 X  ---      X
 X    | -    X
 X      |--  X
