@@ -95,8 +95,8 @@ function physics_test_bb_overlap(body1, body2) {
  * @param bb2 Bounding box.
  */
 function physics_test_bb_overlaps_bb(bb1, bb2) {
-    const x_overlap = ( bb1.max.x >= bb2.min.x ) && ( bb2.max.x >= bb1.min.x );
-    const y_overlap = ( bb1.max.y >= bb2.min.y ) && ( bb2.max.y >= bb1.min.y );
+    const x_overlap = ( bb1.max.x > bb2.min.x ) && ( bb2.max.x > bb1.min.x );
+    const y_overlap = ( bb1.max.y > bb2.min.y ) && ( bb2.max.y > bb1.min.y );
 
     return ( x_overlap && y_overlap );
 }
@@ -155,7 +155,7 @@ function _collision_test_circle_vs_shape(circle, body2) {
             // if the distance between the centers is larger than the sum of
             // the radiuses, then they are colliding.
             var distance = circle.pos.distanceTo(body2.pos);
-            return ( distance <= ( circle.shape.radius + body2.shape.radius ) );
+            return ( distance < ( circle.shape.radius + body2.shape.radius ) );
         case PHYSIC_SHAPE.RECTANGLE:
             return _collision_test_rectangle_vs_circle(body2, circle);
         default:
@@ -195,7 +195,8 @@ function _collision_test_rectangle_vs_circle(rectangle, circle) {
     // get distance from closest edges
     var dist_x = circle.pos.x - testX;
     var dist_y = circle.pos.y - testY;
-    var distance = Math.sqrt( ( dist_x * dist_x ) + ( dist_y * dist_y ) );
+    var distance_sqrd = ( dist_x * dist_x ) + ( dist_y * dist_y );
     
-    return ( distance <= circle.shape.radius );
+    // compares the square of the distance to the square of the radius
+    return ( distance_sqrd < (circle.shape.radius * circle.shape.radius) );
 }

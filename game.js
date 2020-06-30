@@ -91,9 +91,9 @@ function game_start(renderer, map) {
     system_manager_init();
 
     // registers the entities and systems
+    system_manager_register(SYSTEM.PHYSICS, physics_system_update);
     system_manager_register(SYSTEM.ROBOT_MOVE, robot_move_system_update);
     system_manager_register(SYSTEM.POINT_AT, point_at_system_update);
-    system_manager_register(SYSTEM.PHYSICS, physics_system_update);
     system_manager_register(SYSTEM.ORB_COLLECTOR, orb_collector_system_update);
     system_manager_register(SYSTEM.AI_STRAIGHT_CHASE, ai_straight_chase_system_update);
     system_manager_register(SYSTEM.AI_PATH_FINDER, ai_path_finder_system_update);

@@ -181,18 +181,22 @@ function _robot_move(entity, physics, data, direction) {
     }
 
     // checks if the target tile is available
-    if( map.tiles[tgt_pos.row][tgt_pos.col] != MAP_TILE.EMPTY ) {
+    if( !robot_can_move(entity, map, tgt_pos) ) {
         return;
     }
-
-    var time = TILE_SIZE / scalar_speed;
-
+    
     // sets the target coordinates
     data.tgt_pos = map_get_tile_coords(tgt_pos.row, tgt_pos.col);
+
+    const distance = new Vector2();
+    distance.subVectors(data.tgt_pos, physics.pos);
+
+    const time = distance.length() / scalar_speed;
+
     data.state = ROBOT_STATE.MOVING;
     data.move_duration = time;
 
-    physics.speed = speed;
+    physics.speed = distance.normalize().multiplyScalar(scalar_speed);
 
     var sprite = entity_manager_get_component(entity, COMPONENT.SPRITE);
     if( sprite !== undefined && data.control_animation ) {
