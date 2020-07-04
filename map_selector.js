@@ -141,6 +141,67 @@ XXXXXXXXXXXXXXXXX
 `;
 
 const MAP_9 = `
+XXXXXXXXXXXXXXX
+X    X o X    X
+X XX X X X XX X
+X XX X   X XX X
+X    XX XX    X
+XXXXX X X XXXXX
+XF  XXX XXX   X
+XoX    P    XoX
+X   XXX XXX   X
+XXXXX X X XXXXX
+X    XX XX    X
+X XX X   X XX X
+X XX X X X XX X
+X    X o X    X
+XXXXXXXXXXXXXXX
+`;
+
+const MAP_10 = `
+XXXXXXXXXXXXXXXXXXXX
+X     XFX          X
+X     X X          X
+X     X X          X
+X      C           X
+X   X XXXXXXX X    X
+X   X         X    X
+XXX X   XX    X    X
+XF CX  P     oXC   X
+XXX X         X XXXX
+X   X   XXXX  X   FX
+X       o     XXXXXX
+X   XXXXXXXXX X    X
+X      C           X
+X     X X          X
+X     XFX          X
+XXXXXXXXXXXXXXXXXXXX
+`;
+
+const MAP_11 = `
+XXXXXXXXXXXXXXXXXXXXXXXX
+X      C              FX
+X XX XXXXXXX XXXXX X XXX
+X XX X  o  X Xo  X o X X
+X XX X XXX X X X XXXXX X
+X o  X XXX X X         X
+XXXXXX XXX X XXXXXXXXX X
+X   XX                 X
+X   XX XXXXX X  XXXXXX X
+X       X  X X         X
+XXXXXXXXXX   XXXXX     X
+X    X P       X       X
+X XX X XXX      XXXXXX X
+X XX X  XXXXXXX        X
+X    X  X  o  X        X
+X    X  X XXX X   XXX  X
+X XX X  X XXX X   XXX  X
+X XX X                 X
+X    X                 X
+XXXXXXXXXXXXXXXXXXXXXXXX
+`;
+
+const MAP_12 = `
 XXXXXXXXXXXXXXXXXX
 X XX  -FC        X
 X XX  ------ - --X
@@ -175,6 +236,9 @@ const MAPS = [
     MAP_7,
     MAP_8,
     MAP_9,
+    MAP_10,
+    MAP_11,
+    MAP_12,
 ];
 
 function map_selector_get_current() {
