@@ -165,15 +165,17 @@ function game_check_system( dt ) {
     var player = entity_manager_get_with_component(COMPONENT.HUMAN_CONTROL);
 
     for( var entity in player ) {
-        var player_collision = entity_manager_get_component(entity, COMPONENT.COLLISION);
-        if( player_collision === undefined ) {
+        var player_collisions = entity_manager_get_component(entity, COMPONENT.COLLISION);
+        if( player_collisions === undefined ) {
             continue;
         }
 
         // checks if collided with an entity that kills the player
-        var other = player_collision.target_entity;
-        if( entity_manager_get_component(other, COMPONENT.PLAYER_KILLER_TAG) !== undefined ) {
-            game_over(false);
+        for( var i = 0; i < player_collisions.length; i++ ) {
+            var other = player_collisions[i].target_entity;
+            if( entity_manager_get_component(other, COMPONENT.PLAYER_KILLER_TAG) !== undefined ) {
+                game_over(false);
+            }
         }
     }
 }

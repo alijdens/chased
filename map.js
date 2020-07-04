@@ -78,6 +78,22 @@ function map_parse(level) {
             coords_row.push(map_get_tile_coords(i, j));
         }
     }
+
+    // physic shapes for the tiles
+    var bodies = [];
+    for( var i = 0; i < tiles.length; i++ ) {
+        const row = tiles[i];
+
+        var bodies_row = [];
+        bodies.push(bodies_row);
+        for( var j = 0; j < row.length; j++ ) {
+            if( row[j] == MAP_TILE.EMPTY ) {
+                bodies_row.push(null);
+            } else {
+                bodies_row.push({ pos: tile_coords[i][j], shape:physics_create_square_shape( TILE_SIZE ) });
+            }
+        }
+    }
     
     return {
         tiles: tiles,
@@ -88,6 +104,7 @@ function map_parse(level) {
         finders: finders,
         orbs: orbs,
         tile_coords: tile_coords,
+        tile_bodies: bodies,
     };
 }
 

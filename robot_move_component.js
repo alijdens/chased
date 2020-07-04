@@ -65,38 +65,6 @@ function robot_move(entity, data, direction) {
 }
 
 /**
- * Checks if the given map cell is empty (i.e. no other robot is there).
- * 
- * @param entiy Entity that wants to move.
- * @param pos Position to check.
- */
-function _is_empty(map, entity, pos) {
-    // builds the cell's bounding-box
-    const coords = map.tile_coords[pos.row][pos.col];
-    const cell_bb = {
-        min: { x: coords.x - TILE_SIZE / 2, y: coords.y - TILE_SIZE / 2 },
-        max: { x: coords.x + TILE_SIZE / 2, y: coords.y + TILE_SIZE / 2 },
-    };
-
-    const entities = entity_manager_get_with_component(COMPONENT.PHYSICS);
-    for( var other in entities ) {
-        const ghost_tag = entity_manager_get_component(other, COMPONENT.GHOST_TAG);
-        if (other == entity || ghost_tag) {
-            continue;
-        }
-
-        const physics = entity_manager_get_component(other, COMPONENT.PHYSICS);
-        const bb = physics_get_body_bb(physics);
-
-        if (physics_test_bb_overlaps_bb(bb, cell_bb)) {
-            return false;
-        }
-    }
-    // no other entity is occupying the cell
-    return true;
-}
-
-/**
  * Checks if a robot can move to the position in the map.
  * 
  * @param entity Entity that wants to move.
@@ -106,7 +74,7 @@ function _is_empty(map, entity, pos) {
 function robot_can_move(entity, map, pos) {
     switch( map.tiles[pos.row][pos.col] ) {
         case MAP_TILE.EMPTY:
-            return _is_empty(map, entity, pos);
+            return true;
         case MAP_TILE.WALL:
             // cannot move to wall tiles
             return false;

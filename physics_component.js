@@ -113,11 +113,6 @@ function physics_test_collision(body1, body2) {
         return false;
     }
 
-    // special case for rectangle vs rectangle that collision test equals to BB test
-    if( body1.shape.type == body2.shape.type && body1.shape.type == PHYSIC_SHAPE.RECTANGLE ) {
-        return true;
-    }
-
     switch( body1.shape.type ) {
         case PHYSIC_SHAPE.RECTANGLE:
             return _collision_test_rectangle_vs_shape(body1, body2);
@@ -138,6 +133,8 @@ function _collision_test_rectangle_vs_shape(rectangle, body2) {
     switch( body2.shape.type ) {
         case PHYSIC_SHAPE.CIRCLE:
             return _collision_test_rectangle_vs_circle(rectangle, body2);
+        case PHYSIC_SHAPE.RECTANGLE:
+            return _rectangle_rectangle_collision(rectangle, body2);
         default:
             throw new Error("Unexpected shape " + body2.shape.type);
     }
@@ -155,9 +152,21 @@ function _collision_test_circle_vs_shape(circle, body2) {
             // if the distance between the centers is larger than the sum of
             // the radiuses, then they are colliding.
             var distance = circle.pos.distanceTo(body2.pos);
-            return ( distance < ( circle.shape.radius + body2.shape.radius ) );
+            if( distance > ( circle.shape.radius + body2.shape.radius ) ) {
+                return false;
+            } else {
+                const len = ( circle.shape.radius + body2.shape.radius ) - distance;
+                return { normal: circle.pos.clone().sub( body2.pos ).setLength( len ) };
+            }
         case PHYSIC_SHAPE.RECTANGLE:
-            return _collision_test_rectangle_vs_circle(body2, circle);
+            const contact = _collision_test_rectangle_vs_circle(body2, circle);
+            if( contact == false ) {
+                return false;
+            } else {
+                // turns the contact direction to it moves the circle out of the rectangle
+                contact.normal.multiplyScalar( -1 );
+                return contact;
+            }
         default:
             throw new Error("Unexpected shape " + body2.shape.type);
     }
@@ -193,10 +202,49 @@ function _collision_test_rectangle_vs_circle(rectangle, circle) {
     }
     
     // get distance from closest edges
-    var dist_x = circle.pos.x - testX;
-    var dist_y = circle.pos.y - testY;
+    var dist_x = testX - circle.pos.x;
+    var dist_y = testY - circle.pos.y;
     var distance_sqrd = ( dist_x * dist_x ) + ( dist_y * dist_y );
     
     // compares the square of the distance to the square of the radius
-    return ( distance_sqrd < (circle.shape.radius * circle.shape.radius) );
+    if( distance_sqrd > (circle.shape.radius * circle.shape.radius) ) {
+        return false;
+    } else {
+        // returns the normal that moves the rectangle out of the circle
+        const len = circle.shape.radius - Math.sqrt( distance_sqrd );
+        return { normal: new Vector2( dist_x, dist_y ).setLength( len ) };
+    }
+}
+
+/**
+ * Checks the collision between 2 rectangles.
+ * 
+ * @param rec1 
+ * @param rec2 
+ */
+function _rectangle_rectangle_collision(rec1, rec2) {
+    const bb1 = physics_get_body_bb(rec1);
+    const bb2 = physics_get_body_bb(rec2);
+
+    const dx = Math.min(bb2.max.x - bb1.min.x, bb1.max.x - bb2.min.x);
+    const dy = Math.min(bb2.max.y - bb1.min.y, bb1.max.y - bb2.min.y);
+    
+    let normal = undefined;
+    if( dx < 0 || dy < 0 ) {
+        throw new Error("dx or dy is < 0");
+    }
+
+    if( dx < dy ) {
+        normal = new Vector2(dx, 0);
+    } else {
+        normal = new Vector2(0, dy);
+    }
+
+    // checks if the orientation of the contact vector is pointing to the direction
+    // that separates the `rec1` from `rec2`
+    const distance = rec2.pos.clone().sub( rec1.pos );
+    if( distance.dot(normal) > 0 ) {
+        normal.multiplyScalar( -1 );
+    }
+    return { normal: normal };
 }

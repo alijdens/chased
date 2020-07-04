@@ -41,7 +41,8 @@ function entity_manager_destroy_entity(entity) {
 }
 
 /**
- * Adds a component to an entity.
+ * Adds a component to an entity. If the component is already registered,
+ * throws an error.
  *
  * @param entity Entity to which the component will be linked to.
  * @param component_name Name of the component to link.
@@ -52,6 +53,17 @@ function entity_manager_add_component(entity, component_name, component) {
         throw new Error("Attempted to register the component '" + component_name + "' twice in entity " + entity);
     }
 
+    entity_manager_update_component(entity, component_name, component);
+}
+
+/**
+ * Updates/adds a component attached to an entity.
+ *
+ * @param entity Entity to which the component will be linked to.
+ * @param component_name Name of the component to link.
+ * @param component Component data to link.
+ */
+function entity_manager_update_component(entity, component_name, component) {
     _component_map[component_name][entity] = component;
     _entity_map[entity].push(component_name);
 }

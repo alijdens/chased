@@ -16,6 +16,12 @@ function robot_move_system_update(dt) {
             throw new Error("robot_move requires a physics component");
         }
 
+        // if the robot collided with another non-ghost body, then we stop the current action
+        const collisions = entity_manager_get_component( entity, COMPONENT.COLLISION );
+        if( _has_caused_a_collision( entity ) && data.state != ROBOT_STATE.ROTATING ) {
+            data.state = ROBOT_STATE.IDLE;
+        }
+
         switch( data.state ) {
             case ROBOT_STATE.IDLE:
                 break;
@@ -29,6 +35,27 @@ function robot_move_system_update(dt) {
                 throw new Error('Unexpected state ' + entity.state);
         }
     }
+}
+
+/**
+ * Checks if the given entity has caused a collision.
+ * 
+ * @param entity Entity to check.
+ */
+function _has_caused_a_collision(entity) {
+    const collisions = entity_manager_get_component(entity, COMPONENT.COLLISION);
+    if( collisions === undefined ) {
+        return false;
+    }
+
+    for( var i = 0; i < collisions.length; i++ ) {
+        const is_ghost = entity_manager_get_component( collisions[i].target_entity, COMPONENT.GHOST_TAG );
+        if( collisions[i].is_causal && !is_ghost ) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**

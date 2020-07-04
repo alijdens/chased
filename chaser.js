@@ -13,7 +13,7 @@ function chaser_create(pos, target_entity) {
     var entity = entity_manager_create_entity();
 
     // attaches the components
-    physics_component_add(entity, coords, 0, physics_create_circular_shape(3));
+    physics_component_add(entity, coords, 0, physics_create_circular_shape(3.5));
     robot_move_component_add(entity, false, 30, Math.PI, false);
     ai_straight_chase_component_add(entity, target_entity);
     sprite_component_add(entity, SPRITES.chaser, false);

@@ -5,11 +5,11 @@ var _current_map = 0;
 
 const TEST_MAP = `
 XXXXXXXXXXXXXXXXXXXXXXXXXXX
-X  C    |  |     |        X
-X - -----  |C    |   C C  X
+X     C |  |     |        X
+X - -----  |     |   C C  X
 X      o        F|        X
 X - -- -------------------X
-X                       F X
+X         C             F X
 X-- --------     |   XX   X
 X         |      |        X
 X   -|    |   -----     --X
@@ -90,7 +90,7 @@ X |        P   X
 XXXXXXXXXXXXXXXX
 `;
 
-var MAP_6 = `
+const MAP_6 = `
 XXXXXXXXXXXXXXXXX
 X         |     X
 X | ------------X
@@ -105,7 +105,7 @@ X              oX
 XXXXXXXXXXXXXXXXX
 `;
 
-var MAP_7 = `
+const MAP_7 = `
 XXXXXXXXXXXXXXXXX
 Xo  |         |PX
 X | |- |- -- XX X
@@ -120,22 +120,52 @@ XoC     XXXXXXXoX
 XXXXXXXXXXXXXXXXX
 `;
 
-var MAP_8 = `
-XXXXXXXXXXXXXXXX
-XC|     P    |CX
-X |          | X
-X |          | X
-X |          | X
-X              X
-X              X
-X              X
-X       o      X
-XXXXXXXXXXXXXXXX
+const MAP_8 = `
+XXXXXXXXXXXXXXXXX
+X               X
+X  X X     X    X
+X X  X     X  X X
+X X  X     X  X X
+X X  X     X  X X
+XCX  X  P  X  XCX
+X    X     X  X X
+X               X
+X      X X      X
+X      X X      X
+X      X X      X
+X      X X      X
+X      X X      X
+X      X X      X
+X       o       X
+XXXXXXXXXXXXXXXXX
+`;
+
+const MAP_9 = `
+XXXXXXXXXXXXXXXXXX
+X XX  -FC        X
+X XX  ------ - --X
+X                X
+X------- ------ -X
+X      | |  o    X
+X        X||     X
+X   | |  |    |  X
+X   | |  |-- --  X
+X  C| | P     o  X
+X   |     | |    X
+X         -----  X
+X           o    X
+X        XXXXXXXXX
+X                X
+X  XXX           X
+X  XXX           X
+X                X
+X       o        X
+XXXXXXXXXXXXXXXXXX
 `;
 
 // list of maps
 const MAPS = [
-//    TEST_MAP,
+    //TEST_MAP,
     MAP_1,
     MAP_2,
     MAP_3,
@@ -144,6 +174,7 @@ const MAPS = [
     MAP_6,
     MAP_7,
     MAP_8,
+    MAP_9,
 ];
 
 function map_selector_get_current() {
