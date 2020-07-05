@@ -123,7 +123,7 @@ XXXXXXXXXXXXXXXXX
 const MAP_8 = `
 XXXXXXXXXXXXXXXXX
 X               X
-X  X X     X    X
+X  X X  o  X    X
 X X  X     X  X X
 X X  X     X  X X
 X X  X     X  X X
