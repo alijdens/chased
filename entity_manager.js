@@ -7,11 +7,11 @@ function entity_manager_init() {
 
     // maps components to the entities that have them attached.
     _component_map = {};
-    
+
     // maps an entity to its components.
     _entity_map = {};
 
-    for( var component_name in COMPONENT ) {
+    for (var component_name in COMPONENT) {
         _component_map[COMPONENT[component_name]] = {};
     }
 }
@@ -32,7 +32,7 @@ function entity_manager_create_entity() {
  */
 function entity_manager_destroy_entity(entity) {
     // removes from all associated components
-    for( var i = 0; i < _entity_map[entity].length; i++ ) {
+    for (var i = 0; i < _entity_map[entity].length; i++) {
         const component = _entity_map[entity][i];
         delete _component_map[component][entity];
     }
@@ -49,7 +49,7 @@ function entity_manager_destroy_entity(entity) {
  * @param component Component data to link.
  */
 function entity_manager_add_component(entity, component_name, component) {
-    if( entity in _component_map[component_name] ) {
+    if (entity in _component_map[component_name]) {
         throw new Error("Attempted to register the component '" + component_name + "' twice in entity " + entity);
     }
 
@@ -78,8 +78,8 @@ function entity_manager_remove_component(entity, component_name) {
     delete _component_map[component_name][entity];
 
     const index = _entity_map[entity].indexOf(component_name);
-    if( index > -1 ) {
-        _entity_map[entity].splice( index, 1 );
+    if (index > -1) {
+        _entity_map[entity].splice(index, 1);
     }
 }
 
@@ -91,7 +91,7 @@ function entity_manager_remove_component(entity, component_name) {
  * @param component_name Name of the component to get.
  */
 function entity_manager_get_component(entity, component_name) {
-    if( !( entity in _component_map[component_name] ) ) {
+    if (!(entity in _component_map[component_name])) {
         return undefined;
     }
 
@@ -105,7 +105,7 @@ function entity_manager_get_component(entity, component_name) {
  * @param component_name Name of the component.
  */
 function entity_manager_has_component(entity, component_name) {
-    return ( entity in _component_map[component_name] );
+    return (entity in _component_map[component_name]);
 }
 
 /**

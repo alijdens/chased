@@ -32,7 +32,7 @@ var _key_pressed = {};
  * @param start_time Time when the last frame started.
  */
 var game_loop = function(renderer, start_time) {
-    if( _reload ) {
+    if (_reload) {
         game_start(renderer, map_selector_get_current());
         return;
     }
@@ -40,10 +40,10 @@ var game_loop = function(renderer, start_time) {
     // calculates the elapsed time since the last call in seconds
     var current_time = Date.now();
     var dt = ((current_time - start_time) / 1000) * _time_multiplier;
-    
+
     // updates the systems
     accumulated_dt += dt;
-    while( accumulated_dt >= frame_rate ) {
+    while (accumulated_dt >= frame_rate) {
         accumulated_dt -= frame_rate;
         system_manager_update(frame_rate);
     }
@@ -53,16 +53,16 @@ var game_loop = function(renderer, start_time) {
     map_draw(viewport, map_get());
     sprite_draw(viewport);
 
-    if( _game_over ) {
+    if (_game_over) {
         game_draw_end_screen(renderer);
     }
 
-    while( !keyboard_queue_is_empty() ) {
-        _process_game_keyboard_event( keyboard_queue_pull() );
+    while (!keyboard_queue_is_empty()) {
+        _process_game_keyboard_event(keyboard_queue_pull());
     }
 
     _game_input_handle();
-    
+
     requestAnimationFrame(function() {
         game_loop(renderer, current_time);
     });
@@ -77,7 +77,7 @@ var game_loop = function(renderer, start_time) {
  * 
  * @note Assets must already been loaded using `sprites_load`.
  */
-function game_start(renderer, map) {    
+function game_start(renderer, map) {
     // initialization
     _game_over = false;
     _reload = false;
@@ -104,13 +104,13 @@ function game_start(renderer, map) {
     // creates the entities
     var player = player_create(map.player_start_position, ROBOT_DIRECTION.UP);
 
-    for( var i = 0; i < map.orbs.length; i++ ) {
+    for (var i = 0; i < map.orbs.length; i++) {
         orb_create(map.orbs[i]);
     }
-    for( var i = 0; i < map.chasers.length; i++ ) {
+    for (var i = 0; i < map.chasers.length; i++) {
         chaser_create(map.chasers[i], player);
     }
-    for( var i = 0; i < map.finders.length; i++ ) {
+    for (var i = 0; i < map.finders.length; i++) {
         finder_create(map.finders[i], player);
     }
 
@@ -127,24 +127,24 @@ function game_start(renderer, map) {
  * 
  * @param renderer Renderer object.
  */
-function game_draw_end_screen(renderer) {    
+function game_draw_end_screen(renderer) {
     var width = renderer.ctx.canvas.width;
     var height = renderer.ctx.canvas.height;
 
     // draws a transparent rectangle over the screen
     renderer.ctx.globalAlpha = 0.4;
     renderer.ctx.fillStyle = "gray";
-    renderer.ctx.fillRect( 0, 0, width, height );
+    renderer.ctx.fillRect(0, 0, width, height);
     renderer.ctx.globalAlpha = 1.0;
 
     var sprite;
-    if( _player_won ) {
+    if (_player_won) {
         sprite = SPRITES.game_won;
     } else {
         sprite = SPRITES.game_lost;
     }
 
-    renderer.draw_screen(sprite, 1/2, 1/3, 1);
+    renderer.draw_screen(sprite, 1 / 2, 1 / 3, 1);
 }
 
 /**
@@ -153,27 +153,27 @@ function game_draw_end_screen(renderer) {
  * 
  * @param dt Time elapsed since last call.
  */
-function game_check_system( dt ) {
+function game_check_system(dt) {
     var orb_entities = entity_manager_get_with_component(COMPONENT.ORB_TAG);
 
     // if there are no orbs, then the player has won
-    if( is_empty( orb_entities ) ) {
+    if (is_empty(orb_entities)) {
         game_over(true);
     }
 
     // checks for collisions
     var player = entity_manager_get_with_component(COMPONENT.HUMAN_CONTROL);
 
-    for( var entity in player ) {
+    for (var entity in player) {
         var player_collisions = entity_manager_get_component(entity, COMPONENT.COLLISION);
-        if( player_collisions === undefined ) {
+        if (player_collisions === undefined) {
             continue;
         }
 
         // checks if collided with an entity that kills the player
-        for( var i = 0; i < player_collisions.length; i++ ) {
+        for (var i = 0; i < player_collisions.length; i++) {
             var other = player_collisions[i].target_entity;
-            if( entity_manager_get_component(other, COMPONENT.PLAYER_KILLER_TAG) !== undefined ) {
+            if (entity_manager_get_component(other, COMPONENT.PLAYER_KILLER_TAG) !== undefined) {
                 game_over(false);
             }
         }
@@ -185,17 +185,17 @@ function game_check_system( dt ) {
  * 
  * @param player_won Boolean indicating whether the player has won the game.
  */
-function game_over( player_won ) {
+function game_over(player_won) {
     // removes all systems except the one that updates the animations
     system_manager_unregister_all();
     system_manager_register(SYSTEM.SPRITE, sprite_update);
 
     _game_over = true;
     _player_won = player_won;
-    
+
     var entity = entity_manager_create_entity();
     sprite_component_add(entity, SPRITES.press_any_key_message, false, 100);
-    sprite_add_draw_params(entity, 1/2, 2/3, 0.7, null, true);
+    sprite_add_draw_params(entity, 1 / 2, 2 / 3, 0.7, null, true);
     sprite_blink_component_add(entity, 0.8);
 
     setTimeout(set_end_game_controls, 1000);
@@ -216,9 +216,9 @@ function game_won() {
     return _player_won;
 }
 
-function is_empty( obj ) {
-    for( var key in obj ) {
-        if( obj.hasOwnProperty( key ) ) {
+function is_empty(obj) {
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
             return false;
         }
     }
@@ -258,8 +258,8 @@ function _process_game_keyboard_event(event) {
     _key_pressed[event.key] = (event.action == 'down');
 
     // handles time speed
-    if( event.action == 'down' && event.key == ' ' ) {
-        if( _time_multiplier == 2 ) {
+    if (event.action == 'down' && event.key == ' ') {
+        if (_time_multiplier == 2) {
             _time_multiplier = 1;
         } else {
             _time_multiplier = 2;
@@ -274,16 +274,16 @@ function _game_input_handle() {
     // gets the player entity
     var entities = entity_manager_get_with_component(COMPONENT.HUMAN_CONTROL);
 
-    for( var entity in entities ) {
+    for (var entity in entities) {
         var data = entity_manager_get_component(entity, COMPONENT.ROBOT_MOVE);
 
-        if( _key_pressed['ArrowUp'] || _key_pressed['w'] ) {
+        if (_key_pressed['ArrowUp'] || _key_pressed['w']) {
             robot_move(entity, data, ROBOT_DIRECTION.UP);
-        } else if( _key_pressed['ArrowRight'] || _key_pressed['d'] ) {
+        } else if (_key_pressed['ArrowRight'] || _key_pressed['d']) {
             robot_move(entity, data, ROBOT_DIRECTION.RIGHT);
-        } else if( _key_pressed['ArrowDown'] || _key_pressed['s'] ) {
+        } else if (_key_pressed['ArrowDown'] || _key_pressed['s']) {
             robot_move(entity, data, ROBOT_DIRECTION.DOWN);
-        } else if( _key_pressed['ArrowLeft'] || _key_pressed['a'] ) {
+        } else if (_key_pressed['ArrowLeft'] || _key_pressed['a']) {
             robot_move(entity, data, ROBOT_DIRECTION.LEFT);
         }
     }
