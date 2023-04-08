@@ -116,3 +116,48 @@ function entity_manager_has_component(entity, component_name) {
 function entity_manager_get_with_component(component_name) {
     return _component_map[component_name];
 }
+
+/**
+ * Returns the current state of the entity manager so it can be
+ * restored later.
+ */
+function entity_manager_get_current_state() {
+    let state = {
+        last_id: _last_id,
+        component_map: _component_map,
+        entity_map: _entity_map,
+    };
+
+    // JSON dump the complex object in order to create deep copies
+    // and not get any reference to the original ones
+    return JSON.stringify(state);
+}
+
+/**
+ * Restores the entity manager to the given state. The given state
+ * must be an object returned by `entity_manager_get_current_state`.
+ */
+function entity_manager_restore_state(new_state) {
+    let state = JSON.parse(new_state);
+
+    // FIXME: this is a hack to restore the vector classes. It could be
+    //        implemented better by adding a `serialize` and `deserialize`
+    //        methods to the components to handle this properly.
+    // update the components that contain vectors to have actual instances
+    // of the vector class instead of plain objects that were simplified by
+    // the serialization/deserialization process.
+    for (var entity in state.component_map[COMPONENT.PHYSICS]) {
+        const comp = state.component_map[COMPONENT.PHYSICS][entity];
+        comp.speed = new Vector2(comp.speed.x, comp.speed.y);
+        comp.pos = new Vector2(comp.pos.x, comp.pos.y);
+    }
+
+    for (var entity in state.component_map[COMPONENT.ROBOT_MOVE]) {
+        const comp = state.component_map[COMPONENT.ROBOT_MOVE][entity];
+        comp.tgt_pos = new Vector2(comp.tgt_pos.x, comp.tgt_pos.y);
+    }
+
+    _last_id = state.last_id;
+    _component_map = state.component_map;
+    _entity_map = state.entity_map;
+}

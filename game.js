@@ -24,6 +24,10 @@ var _reload = false;
 // for it to be released.
 var _key_pressed = {};
 
+// stack of game checkpoints that can be used to restore the game to a
+// previously stored state.
+var checkpoints = [];
+
 
 /**
  * Main game loop.
@@ -34,6 +38,11 @@ var _key_pressed = {};
 var game_loop = function(renderer, start_time) {
     if (_reload) {
         game_start(renderer, map_selector_get_current());
+
+        // if there was a checkpoint, restore it to the last one
+        if (checkpoints.length > 0) {
+            entity_manager_restore_state(checkpoints[checkpoints.length - 1]);
+        }
         return;
     }
 
@@ -158,7 +167,11 @@ function game_check_system(dt) {
 
     // if there are no orbs, then the player has won
     if (is_empty(orb_entities)) {
+        // if the player won, clear the checkpoints for the next level
+        checkpoints = [];
+
         game_over(true);
+        return;
     }
 
     // checks for collisions
@@ -175,6 +188,7 @@ function game_check_system(dt) {
             var other = player_collisions[i].target_entity;
             if (entity_manager_get_component(other, COMPONENT.PLAYER_KILLER_TAG) !== undefined) {
                 game_over(false);
+                return;
             }
         }
     }
@@ -263,6 +277,15 @@ function _process_game_keyboard_event(event) {
             _time_multiplier = 1;
         } else {
             _time_multiplier = 2;
+        }
+    }
+
+    // handles checkpoint creation/deletion
+    if (event.action == 'down' && event.key == 'c' && !_game_over) {
+        checkpoints.push(entity_manager_get_current_state());
+    } else if (event.action == 'down' && event.key == 'v') {
+        if (checkpoints.length > 0) {
+            checkpoints.pop();
         }
     }
 }
